@@ -1,9 +1,12 @@
 import streamlit as st
-from streamlit_authenticator.authenticate.authentication import AuthenticationHandler
-import yaml
-from yaml.loader import SafeLoader
-import streamlit_authenticator as stauth
 from utils import *
+
+def create_user(username, name, email, password, confirm_password):
+    loader('Logando...')
+    if username != '' and name != '' and email != and password != '' and confirm_password != '':
+        return True
+    else: 
+        return False
 
 def main():
     st.set_page_config(
@@ -14,11 +17,6 @@ def main():
     )
     add_custom_css()
 
-    with open('./config.yaml') as file:
-        config = yaml.load(file, Loader=SafeLoader)
-
-    auth_handler = AuthenticationHandler(credentials=config['credentials'])
-
     st.title("Criar Conta")
     username = st.text_input("Usuário:")
     name = st.text_input("Nome Completo:")
@@ -27,12 +25,7 @@ def main():
     confirm_password = st.text_input("Confirmar Senha:", type="password")
 
     if st.button("Criar Conta", use_container_width=True, type='primary', help="Clique para criar uma nova conta"):
-        if auth_handler.register_user(new_password=password, new_password_repeat=confirm_password, pre_authorization=False, new_username=username, new_name=name, new_email=email):
-            with open('./config.yaml', 'w') as file:
-                yaml.dump(config, file, default_flow_style=False)
-            st.success("Conta criada com sucesso!")
-        else:
-            st.error("Erro ao criar conta")
+        
     elif st.session_state['authentication_status'] is False:
         st.error('Erro ao criar conta')
     elif st.session_state['authentication_status'] is None:
